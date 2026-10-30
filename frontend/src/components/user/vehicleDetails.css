@@ -1,0 +1,118 @@
+.vehicle-details-page img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* Booking Modal */
+.booking-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.booking-modal {
+  background: #fff;
+  padding: 25px;
+  width: 420px;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+}
+
+/* DATE PICKER UI CLEANING */
+.react-datepicker {
+  border: none !important;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  border-radius: 12px;
+}
+
+.react-datepicker__header {
+  background-color: #fff !important;
+  border-bottom: none !important;
+}
+
+.react-datepicker__current-month {
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  padding: 10px 0;
+}
+
+.react-datepicker__month {
+  padding: 15px;
+}
+
+.react-datepicker__day {
+  width: 38px !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  margin: 3px !important;
+  border-radius: 10px !important;
+  transition: 0.2s ease;
+}
+
+.react-datepicker__day:hover {
+  background-color: #e9ecef !important;
+}
+
+/* Selected range */
+.react-datepicker__day--selected,
+.react-datepicker__day--in-range {
+  background-color: #007bff !important;
+  color: white !important;
+  border-radius: 10px !important;
+}
+
+/* Booked dates */
+.react-datepicker__day--disabled {
+  background-color: #f5c7c7 !important;
+  color: #a00000 !important;
+  border-radius: 10px !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.clean-date-picker {
+  width: 100%;
+}
+
+
+
+
+/* Make Book Now button red */
+.vehicle-details-page .btn-primary {
+  background-color: red !important;
+  border-color: #dc3545 !important;
+}
+
+.vehicle-details-page .btn-primary:hover {
+  background-color: #d51313 !important;
+  border-color: #d61529 !important;
+}
+
+/* Make Confirm button red */
+.booking-modal .btn-success {
+  background-color: red !important;
+  border-color: #dc3545 !important;
+}
+
+.booking-modal .btn-success:hover {
+  background-color: #d51313 !important;
+  border-color: #d51313 !important;
+}
+
+/* Optional: improve Cancel button */
+.booking-modal .btn-secondary {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+
+.booking-modal .btn-secondary:hover {
+  background-color: #565e64 !important;
+}

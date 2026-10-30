@@ -1,0 +1,26 @@
+.addvehicle-page .navbar .btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 1, 1, 0.3);
+}
+
+.addvehicle-page .form-container button[type="submit"] {
+  background: red !important;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 10px 20px;
+  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.addvehicle-page .form-container button[type="submit"]:hover {
+  background: darkred !important;
+}

@@ -1,0 +1,144 @@
+* {
+  font-family: 'Signika', sans-serif;
+}
+
+/* 🌟 Overall Page Background */
+.signup-page {
+  background: linear-gradient(135deg, #ffe5e7 0%, #ffd4d8 50%, #ffe9e9 100%);
+  min-height: 100vh;
+  padding: 0;
+}
+
+/* Left Image */
+.s-img-container {
+  background-image: url("../assets/cr.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 20px 0 0 20px;
+}
+
+/* Right Side Container */
+.s-main-con {
+  height: 86vh;
+  background-color: #ffffff;
+  padding: 35px;              /* reduced from 60px */
+  border-radius: 0 20px 20px 0;
+  box-shadow: 0 6px 18px rgba(220, 53, 69, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Signup Inner Card */
+.signup-container {
+  border: 2px solid #ffc5c5;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 22px 28px;         /* reduced from 35px 45px */
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.1);
+  width: 100%;
+  max-width: 380px;           /* ensures it doesn't overflow */
+}
+
+/* Title */
+.c-a-a {
+  font-size: 1.5rem;          /* reduced */
+  margin-bottom: 12px;        /* small spacing */
+  color: #dc3545;
+}
+
+/* Labels */
+.s-lab {
+  font-size: 0.95rem;         /* reduced */
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Input container */
+.s-inp {
+  background: #fff5f5;
+  border-radius: 6px;
+  border: 1px solid #ffcccc;
+  padding: 6px 10px;          /* reduced height */
+  margin-bottom: 12px;        /* reduced */
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+/* Inputs inside */
+.s-inp input,
+.s-inp select {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 0.95rem;         /* reduced font */
+  color: #333;
+  width: 100%;
+  padding: 4px 0;             /* reduced input height */
+}
+
+/* Hover */
+.s-inp:hover,
+.s-inp:focus-within {
+  background: #ffecec;
+  border-color: #dc3545;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Button */
+.signup-page .btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 0;             /* reduced from 10px */
+  font-size: 0.95rem;         /* reduced */
+  font-weight: 600;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+  transition: 0.2s ease;
+}
+
+.signup-page .btn:hover {
+  background: #b81f2a;
+  transform: translateY(-1px);
+}
+
+/* Links */
+.spn {
+  color: #dc3545;
+  font-size: 14px;            /* reduced */
+  font-weight: 600;
+}
+
+/* 📱 Responsive */
+@media (max-width: 992px) {
+  .signup-page {
+    padding: 20px;
+  }
+
+  .s-img-container {
+    display: none;
+  }
+
+  .s-main-con {
+    padding: 20px;
+    border-radius: 20px;
+    height: auto;
+    box-shadow: none;
+  }
+
+  .signup-container {
+    padding: 20px;
+    border: 1.5px solid #ffbcbc;
+    max-width: 100%;
+  }
+
+  .c-a-a {
+    font-size: 1.4rem;
+  }
+}

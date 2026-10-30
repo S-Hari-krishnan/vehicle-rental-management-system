@@ -1,0 +1,111 @@
+.home-page .navbar .btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-top: 5px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 1, 1, 0.3);
+}
+.home-page .navbar .btn:hover{
+  background: linear-gradient(135deg, #ee0b0b 0%, #6a11cb 100%);
+  transform: translateY(-2px);
+  color: white;
+  box-shadow: 0 6px 15px rgba(11, 33, 71, 0.4);
+}
+
+.home-page .nav-link{
+    margin-top: 4px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.home-page .h-img{
+    object-fit: cover;
+    width: 100%;
+    height: 500px;
+    filter: brightness(80%);
+}
+
+.home-page .hero-section{
+    height: 500px;
+}
+
+.home-page .hero-content{
+    position: absolute;
+    top: 0;
+    color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-page .hero-content h1,h4{
+    font-weight: bold;
+}
+
+.home-page .intro{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.scroll-container{
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 0px;
+}
+
+.home-page .vechicle-display .btn{
+  background-color: #ee0b0b;
+  color: white;
+  
+}
+
+.home-page .owner-call .btn{
+  background-color: #ee0b0b;
+  color: white;
+}
+
+
+/*footer*/
+
+.footer {
+  background: linear-gradient(135deg, #1b1b1b 0%, #292929 100%);
+  color: white;
+}
+
+.footer h5, 
+.footer h6 {
+  color: #ff4444;
+}
+
+.footer-link {
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #ff4444;
+}
+
+.footer i {
+  color: #ff4444;
+}
+
+.footer .border-top {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}

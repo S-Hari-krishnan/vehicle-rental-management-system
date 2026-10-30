@@ -1,0 +1,22 @@
+.admin-bookings-page {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.booking-card {
+  background: white;
+  border-radius: 12px;
+  transition: 0.3s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-5px);
+}
+
+.booking-info p {
+  font-size: 0.9rem;
+}
+
+.btn-danger {
+  border-radius: 8px;
+}

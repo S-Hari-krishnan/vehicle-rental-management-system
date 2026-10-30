@@ -1,0 +1,20 @@
+.admin-dashboard-page {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Card hover effect */
+.stat-card {
+  border-radius: 12px;
+  transition: 0.2s ease;
+  background: white;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Brand consistency */
+.nav-link {
+  font-weight: 500;
+}

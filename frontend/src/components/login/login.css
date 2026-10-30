@@ -1,0 +1,145 @@
+* {
+  font-family: 'Signika', sans-serif;
+}
+
+/* 🌟 Page Background (Brand Gradient) */
+.login-page {
+  background: linear-gradient(135deg, #ffe5e7 0%, #ffd4d8 50%, #ffe9e9 100%);
+  min-height: 100vh;
+}
+
+/* Left Section Card */
+.main-con {
+  height: 86vh;
+  background: #ffffff;
+  padding: 60px;
+  border-radius: 20px 0 0 20px;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+}
+
+/* Login Card Container */
+.login-container {
+  border: 2px solid #f0b9b9;
+  border-radius: 12px;
+  padding: 35px 45px;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(220, 53, 69, 0.15);
+  transform: scale(1.05);
+  max-width: 75%;
+}
+
+/* Title */
+.l-t-a {
+  font-size: 1.7rem;
+  margin-bottom: 20px;
+  color: #dc3545;
+}
+
+/* Labels */
+.lab {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Input field wrapper */
+.inp {
+  background: #fff5f5;
+  border-radius: 7px;
+  padding: 10px 12px;
+  border: 1px solid #ffcccc;
+  box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+/* Input hover focus */
+.inp:hover,
+.inp:focus-within {
+  border-color: #dc3545;
+  background: #ffecec;
+  box-shadow: 0 3px 10px rgba(220, 53, 69, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Remove default input styles */
+.inp input, button {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* 🔴 Red Login Button */
+.login-page .btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+
+.login-page .btn:hover {
+  background: #bd2130;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(220, 53, 69, 0.4);
+}
+
+/* Right Image Section */
+.img-container {
+  background-image: url("../assets/bk-l.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0px 20px 20px 0px;
+}
+
+/* Links */
+.spn {
+  color: #dc3545;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* 📱 Responsive for small screens */
+@media (max-width: 992px) {
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+    background: linear-gradient(135deg, #ffd6d9 0%, #ffe5e7 50%, #fff1f2 100%);
+  }
+
+  .main-con {
+    border-radius: 20px;
+    padding: 35px 25px;
+    height: auto;
+    box-shadow: none;
+  }
+
+  .login-container {
+    border: 1.5px solid #ffbcbc;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .l-t-a {
+    font-size: 1.5rem;
+  }
+
+  .img-container {
+    display: none;
+  }
+}

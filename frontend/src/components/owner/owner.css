@@ -1,0 +1,161 @@
+/* ----------------- HERO SECTION ----------------- */
+.ownerdashboard-page .h-img {
+  object-fit: cover;
+  width: 100%;
+  height: 500px;
+  filter: brightness(80%);
+}
+
+.ownerdashboard-page .hero-section {
+  height: 500px;
+}
+
+.ownerdashboard-page .hero-content {
+  position: absolute;
+  top: 0;
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ownerdashboard-page .hero-content h1,
+.ownerdashboard-page .hero-content h4 {
+  font-weight: bold;
+}
+
+/* ----------------- NAVBAR BUTTON ----------------- */
+.navbar .btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 1, 1, 0.3);
+}
+.navbar .btn:hover {
+  background: rgb(161, 19, 19);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 1, 1, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ----------------- MODAL ----------------- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-container {
+  background: white;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 10px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.doc-img {
+  width: 100%;
+  margin-top: 5px;
+  border-radius: 5px;
+}
+
+/* ----------------- BOOKING CARDS (WIDER + BIGGER) ----------------- */
+
+.owner-booking-card {
+  max-width: 350px;          /* increased width from 300 → 350px */
+  width: 100%;
+  margin: auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Adjust image for wider layout */
+.owner-booking-card .card-img-top {
+  height: 150px;              /* slightly increased for balance */
+  object-fit: cover;
+}
+
+/* Adjust padding for larger card */
+.owner-booking-card .card-body {
+  padding: 14px 16px;
+}
+
+/* Text styling for larger card */
+.owner-booking-card p,
+.owner-booking-card h5,
+.owner-booking-card h6 {
+  line-height: 1.28;
+  margin-bottom: 5px;
+  font-size: 16px;            /* increased font size */
+}
+
+.owner-booking-card h5 {
+  font-size: 19px;            /* bigger heading */
+  font-weight: 700;
+}
+
+/* View Vehicle button (kept as is) */
+.view-vehicle-btn {
+  background-color: red !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: 0.3s ease;
+  margin-top: 12px !important;
+}
+
+.view-vehicle-btn:hover {
+  background-color: darkred !important;
+}
+
+
+.update-vehicle-btn {
+  background-color: red !important;
+  color: white !important;
+  font-weight: 600;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.25);
+  transition: 0.3s ease;
+}
+
+.update-vehicle-btn:hover {
+  background-color: darkred !important;
+  transform: translateY(-1px);
+}
+
+.update-vehicle-btn:disabled {
+  background-color: #b5b5b5 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+}

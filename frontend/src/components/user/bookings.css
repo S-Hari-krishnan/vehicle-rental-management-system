@@ -1,0 +1,58 @@
+/* CARD SIZE & LOOK IMPROVED */
+.booking .card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.25s ease-in-out;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  max-width: 320px;   /* reduce card width */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Smooth hover effect */
+.booking .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* Reduce image height */
+.booking .card-img-top {
+  height: 160px ;
+  object-fit: cover;
+}
+
+/* Improve text spacing */
+.booking .card-body {
+  padding: 12px 16px;
+}
+
+.booking .card-body h5 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.booking .card-body p {
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+/* Price text */
+.booking .card-body h6 {
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+/* View Button (already red — improve style slightly) */
+.booking .view-btn {
+  background: red;
+  color: white;
+  border: none t;
+  padding: 6px 0 ;
+  border-radius: 6px;
+}
+
+.booking .view-btn:hover {
+  background: #b02a37 ;
+  color: #ffffff;
+}

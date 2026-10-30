@@ -1,0 +1,85 @@
+
+.userhome-page .h-img {
+  object-fit: cover;
+  width: 100%;
+  height: 500px;
+  filter: brightness(80%);
+}
+
+.userhome-page .hero-section {
+  height: 500px;
+  position: relative;
+}
+
+.userhome-page .hero-content {
+  position: absolute;
+  top: 0;
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.userhome-page .hero-content h1,
+.userhome-page .hero-content h4 {
+  font-weight: bold;
+}
+
+.userhome-page .intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.scroll-container {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 0px;
+}
+
+.userhome-page .vechicle-display .btn {
+  background-color: #ee0b0b;
+  color: white;
+}
+
+.userhome-page .owner-call .btn {
+  background-color: #ee0b0b;
+  color: white;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(135deg, #1b1b1b 0%, #292929 100%);
+  color: white;
+}
+
+.footer h5,
+.footer h6 {
+  color: #ff4444;
+}
+
+.footer-link {
+  color: #ddd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #ff4444;
+}
+
+.footer i {
+  color: #ff4444;
+}
+
+.footer .border-top {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}

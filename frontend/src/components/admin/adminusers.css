@@ -1,0 +1,23 @@
+.admin-users-page {
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.user-card {
+  background: #fff;
+  border-radius: 12px;
+  transition: 0.3s ease-in-out;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+}
+
+.user-card .badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+
+.btn-danger {
+  border-radius: 8px;
+}

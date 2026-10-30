@@ -1,0 +1,38 @@
+/* Full-page center */
+.admin-login-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffe5e7, #ffd4d8, #ffe9e9); /* red/pink brand gradient */
+  padding: 15px;
+}
+
+/* Card shadow remains same, only border color added */
+.admin-login-wrapper .card {
+  border: 1.5px solid #ffc5c5; /* light red border */
+  border-radius: 12px;
+}
+
+/* Title text color */
+.admin-login-wrapper h3 {
+  color: #dc3545; /* brand red */
+}
+
+/* Input fields border color */
+.admin-login-wrapper input.form-control-lg {
+  border: 1px solid #ffbcbc; /* light red border */
+}
+
+.admin-login-wrapper input.form-control-lg:focus {
+  border-color: #dc3545; /* red focus border */
+  box-shadow: 0 0 4px rgba(220, 53, 69, 0.35);
+}
+
+/* Button color updated ONLY */
+.admin-login-wrapper .btn-primary {
+  background-color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+
+.admin-login-wrapper .btn-primary:hover {
+  background-color: #b81f2a !important;
+  border-color: #b81f2a !important;
+}
