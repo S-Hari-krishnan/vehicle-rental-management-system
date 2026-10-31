@@ -1,57 +1,78 @@
-// import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import ProfileModal from "../ProfileModal";
 
-// export default function UserNavbar() {
-//   const navigate = useNavigate();
-//   const isLoggedIn = localStorage.getItem("token");
+const links = [
+  { to: "/user/home", label: "Home", key: "home" },
+  { to: "/vehicles/cars", label: "Cars", key: "cars" },
+  { to: "/vehicles/bikes", label: "Bikes", key: "bikes" },
+  { to: "/bookings/user", label: "My Bookings", key: "bookings" },
+];
 
-//   const handleLogout = () => {
-//     if (window.confirm("Are you sure you want to logout?")) {
-//       localStorage.clear();
-//       navigate("/login");
-//     }
-//   };
+export default function UserNavbar({ active }) {
+  const navigate = useNavigate();
+  const [showProfile, setShowProfile] = useState(false);
+  const closeProfile = useCallback(() => setShowProfile(false), []);
 
-//   return (
-//     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-//       <div className="container-fluid mx-5">
-//         <Link className="navbar-brand fw-bold" style={{ color: "red" }}>
-//           Vishnu Rentals
-//         </Link>
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      localStorage.clear();
+      toast.success("Logged out successfully");
+      navigate("/login");
+    }
+  };
 
-//         <button
-//           className="navbar-toggler"
-//           type="button"
-//           data-bs-toggle="collapse"
-//           data-bs-target="#navContent"
-//         >
-//           <span className="navbar-toggler-icon"></span>
-//         </button>
+  return (
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+      <div className="container-fluid mx-3 mx-lg-5">
+        <Link to="/user/home" className="navbar-brand fw-bold" style={{ color: "red" }}>
+          Vishnu Rentals
+        </Link>
 
-//         <div className="collapse navbar-collapse justify-content-end" id="navContent">
-//           <ul className="navbar-nav gap-5">
-//             <li className="nav-item">
-//               <Link to="/user/home" className="nav-link">Home</Link>
-//             </li>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#userNav"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-//             <li className="nav-item">
-//               <Link to="/vehicles/cars" className="nav-link">Cars</Link>
-//             </li>
+        <div className="collapse navbar-collapse justify-content-end" id="userNav">
+          <ul className="navbar-nav gap-3 gap-lg-4 align-items-lg-center">
+            {links.map((link) => (
+              <li className="nav-item" key={link.key}>
+                <Link
+                  to={link.to}
+                  className={`nav-link ${active === link.key ? "fw-bold text-danger" : ""}`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
 
-//             <li className="nav-item">
-//               <Link to="/vehicles/bikes" className="nav-link">Bikes</Link>
-//             </li>
-//             <li className="nav-item">
-//               <Link to="/bookings/user" className="nav-link">My Bookings</Link>
-//             </li>
+            <li className="nav-item">
+              <button
+                type="button"
+                className={`nav-link bg-transparent border-0 ${showProfile ? "fw-bold text-danger" : ""}`}
+                onClick={() => setShowProfile(true)}
+              >
+                Profile
+              </button>
+            </li>
 
-//             <li className="nav-item">
-//               <button className="btn btn-danger px-3" onClick={handleLogout}>
-//                 Logout
-//               </button>
-//             </li>
-//           </ul>
-//         </div>
-//       </div>
-//     </nav>
-//   );
-// }
+            <li className="nav-item">
+              <button className="btn btn-danger px-3" onClick={handleLogout}>
+                Logout
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <ProfileModal show={showProfile} onClose={closeProfile} />
+    </nav>
+  );
+}

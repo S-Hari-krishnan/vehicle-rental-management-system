@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function UserFooter() {
   return (
-    <footer className="footer mt-5 py-4 text-white">
+    <footer className="footer py-4 text-white">
       <div className="container">
 
         <div className="row text-center text-md-start">

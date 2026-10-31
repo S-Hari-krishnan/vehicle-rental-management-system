@@ -1,36 +1,41 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../../api";
 import "./adminlogin.css";
+import { toast } from "react-toastify";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken")) {
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const res = await API.post("/admin/login", {
-        email,
-        password,
-      });
-
+      const res = await API.post("/admin/login", { email, password });
       localStorage.setItem("adminToken", res.data.token);
+      localStorage.setItem("role", "admin");
+      toast.success("Admin login successful");
       navigate("/admin/dashboard");
-    } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="admin-login-wrapper d-flex justify-content-center align-items-center">
-      <div
-        className="card shadow-lg p-4"
-        style={{ width: "100%", maxWidth: "380px" }}
-      >
+      <div className="card shadow-lg p-4" style={{ width: "100%", maxWidth: "380px" }}>
         <h3 className="text-center mb-4 fw-bold">Admin Login</h3>
 
         <form onSubmit={handleSubmit}>
@@ -58,10 +63,14 @@ export default function AdminLogin() {
             />
           </div>
 
-          <button className="btn btn-primary btn-lg w-100 mt-2">
-            Login
+          <button className="btn btn-primary btn-lg w-100 mt-2" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
+
+        <div className="text-center mt-3">
+          <Link to="/login">Back to user login</Link>
+        </div>
       </div>
     </div>
   );

@@ -91,7 +91,7 @@
 
 /* Right Image Section */
 .img-container {
-  background-image: url("../assets/bk-l.jpg");
+  background-image: url("/assets/bk-l.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

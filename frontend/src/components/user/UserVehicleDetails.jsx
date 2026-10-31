@@ -1,12 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import API, { getImageUrl } from "../../api";
+import API, { getImageUrl, getVehicleImage } from "../../api";
 import "./vehicleDetails.css";
 import UserFooter from "./UserFooter";
-
-// IMPORT DATE PICKER
+import UserNavbar from "./UserNavbar";
+import VehicleImage from "../VehicleImage";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { toast } from "react-toastify";
+
+const MAX_BOOK_DAYS = 30;
+
+const formatDate = (date) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
+
+const dateOnlyFromValue = (value) => String(value || "").slice(0, 10);
+
+const expandRange = (startValue, endValue) => {
+  const dates = [];
+  const start = new Date(`${dateOnlyFromValue(startValue)}T00:00:00`);
+  const end = new Date(`${dateOnlyFromValue(endValue)}T00:00:00`);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return dates;
+
+  const current = new Date(start);
+  while (current <= end) {
+    dates.push(formatDate(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return dates;
+};
 
 export default function UserVehicleDetails() {
   const { id } = useParams();
@@ -14,75 +42,79 @@ export default function UserVehicleDetails() {
 
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Booking modal states
   const [showBookingModal, setShowBookingModal] = useState(false);
-
-  // RANGE PICKER STATES
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
-
-  // BOOKED DATES
   const [bookedDates, setBookedDates] = useState([]);
-  const MAX_BOOK_DAYS = 7;
+  const [reviews, setReviews] = useState([]);
+  const [activeImage, setActiveImage] = useState("");
+
+  const images = useMemo(() => {
+    if (!vehicle) return [];
+    if (vehicle.images?.length) return vehicle.images.map((image) => getImageUrl(image));
+    return vehicle.vehicleImage ? [getImageUrl(vehicle.vehicleImage)] : [];
+  }, [vehicle]);
 
   useEffect(() => {
+    const fetchVehicleDetails = async () => {
+      try {
+        setLoading(true);
+        const res = await API.get(`/vehicle/${id}`);
+        setVehicle(res.data.vehicle);
+        const first = res.data.vehicle?.images?.[0]?.url || res.data.vehicle?.vehicleImage;
+        setActiveImage(first ? getImageUrl(first) : "");
+      } catch (error) {
+        console.error(error);
+        setVehicle(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchVehicleDetails();
-    fetchBookedDates();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Format date as YYYY-MM-DD
-  const formatDate = (date) => {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, "0");
-    const d = String(date.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  };
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const res = await API.get(`/vehicle/${id}/availability`);
+        const excluded = [];
 
-  // 1) Fetch vehicle details
-  const fetchVehicleDetails = async () => {
-    try {
-      setLoading(true);
+        (res.data.bookings || []).forEach((booking) => {
+          excluded.push(...expandRange(booking.pickupDate, booking.dropDate));
+        });
 
-      const res = await API.get(`/vehicle/${id}`);
-      setVehicle(res.data.vehicle);
-    } catch (error) {
-      console.log(error);
-      setVehicle(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+        (res.data.blockedDates || []).forEach((blocked) => {
+          excluded.push(...expandRange(blocked.start, blocked.end));
+        });
 
-  // 2) Fetch booked dates for this vehicle
-  const fetchBookedDates = async () => {
-    try {
-      const res = await API.get(`/booking/booked-dates/${id}`);
+        setBookedDates([...new Set(excluded)]);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      const expanded = [];
+    const fetchReviews = async () => {
+      try {
+        const res = await API.get(`/reviews/vehicle/${id}`, { params: { limit: 6 } });
+        setReviews(res.data.reviews || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      res.data.bookings.forEach((b) => {
-        let cur = new Date(b.pickupDate + "T00:00:00");
-        let last = new Date(b.dropDate + "T00:00:00");
-
-        while (cur <= last) {
-          expanded.push(formatDate(cur));
-          cur.setDate(cur.getDate() + 1);
-        }
-      });
-
-      setBookedDates(expanded);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    fetchAvailability();
+    fetchReviews();
+  }, [id]);
 
   const handleBookClick = () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
+    if (!localStorage.getItem("token")) {
       navigate("/login");
+      return;
+    }
+
+    if (vehicle?.isAvailable === false) {
+      toast.error("This vehicle is currently unavailable");
       return;
     }
 
@@ -91,219 +123,205 @@ export default function UserVehicleDetails() {
 
   const handleConfirmBooking = async () => {
     if (!startDate || !endDate) {
-      alert("Please select a date range.");
+      toast.error("Please select a date range.");
       return;
     }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const selectedStartDate = new Date(startDate);
-    selectedStartDate.setHours(0, 0, 0, 0);
+    const selectedStart = new Date(startDate);
+    selectedStart.setHours(0, 0, 0, 0);
 
-    if (selectedStartDate < today) {
-      alert("You cannot select past dates.");
+    if (selectedStart < today) {
+      toast.error("You cannot select past dates.");
       return;
     }
 
-    // Max booking limit
-    const diffDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
-
-    if (diffDays > MAX_BOOK_DAYS) {
-      alert(`You can only book for a maximum of ${MAX_BOOK_DAYS} days.`);
+    const days = (endDate - startDate) / (1000 * 60 * 60 * 24);
+    if (days > MAX_BOOK_DAYS) {
+      toast.error(`You can only book for a maximum of ${MAX_BOOK_DAYS} days.`);
       return;
     }
 
-    // FRONTEND OVERLAP CHECK
-    const selected = [];
-    let cur = new Date(startDate);
-    let last = new Date(endDate);
-
-    while (cur <= last) {
-      selected.push(formatDate(cur));
-      cur.setDate(cur.getDate() + 1);
-    }
-
-    const overlap = selected.some((d) => bookedDates.includes(d));
-
-    if (overlap) {
-      alert("These dates are already booked. Please choose different dates.");
+    const selected = expandRange(startDate, endDate);
+    if (selected.some((date) => bookedDates.includes(date))) {
+      toast.error("These dates are not available. Please choose different dates.");
       return;
     }
 
-    // SEND TO BACKEND
     try {
-      const token = localStorage.getItem("token");
+      await API.post("/booking/create", {
+        vehicleId: vehicle._id,
+        pickupDate: formatDate(startDate),
+        dropDate: formatDate(endDate),
+      });
 
-      await API.post(
-        "/booking/create",
-        {
-          vehicleId: vehicle._id,
-          pickupDate: formatDate(startDate),
-          dropDate: formatDate(endDate),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("Booking successful!");
+      toast.success("Booking created successfully!");
       setShowBookingModal(false);
       navigate("/bookings/user");
-    } catch (err) {
-      console.log(err);
-      alert(err.response?.data?.message || "Booking failed");
-    }
-  };
-
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      localStorage.clear();
-      navigate("/login");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Booking failed");
     }
   };
 
   if (loading) {
-    return (
-      <div className="container text-center mt-5">
-        <h4>Loading vehicle details...</h4>
-      </div>
-    );
+    return <h4 className="text-center mt-5">Loading vehicle details...</h4>;
   }
 
   if (!vehicle) {
     return (
       <div className="container text-center mt-5">
         <h4>Vehicle not found</h4>
-        <button
-          className="btn btn-outline-secondary mt-3"
-          onClick={() => navigate(-1)}
-        >
-          ← Back
+        <button className="btn btn-outline-secondary mt-3" onClick={() => navigate(-1)}>
+          Back
         </button>
       </div>
     );
   }
 
   return (
-    <div>
-      {/* INLINE NAVBAR */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container-fluid mx-5">
-          <Link
-            to="/user/home"
-            className="navbar-brand fw-bold"
-            style={{ color: "red" }}
-          >
-            Vishnu Rentals
-          </Link>
+    <div className="page-shell">
+      <UserNavbar active="" />
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navContent"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div
-            className="collapse navbar-collapse justify-content-end"
-            id="navContent"
-          >
-            <ul className="navbar-nav gap-5">
-              <li className="nav-item">
-                <Link to="/user/home" className="nav-link">
-                  Home
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/vehicles/cars" className="nav-link fw-bold">
-                  Cars
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/vehicles/bikes" className="nav-link">
-                  Bikes
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/bookings/user" className="nav-link">
-                  My Bookings
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <button className="btn btn-danger px-3" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      {/* END NAVBAR */}
-
-      <div className="container my-5 vehicle-details-page">
-        <button
-          className="btn btn-outline-secondary mb-3"
-          onClick={() => navigate(-1)}
-        >
-          ← Back
+      <div className="container my-5 vehicle-details-page page-main">
+        <button className="btn btn-outline-secondary mb-3" onClick={() => navigate(-1)}>
+          Back
         </button>
 
-        <div className="row">
+        <div className="row g-4">
           <div className="col-md-6">
-            <img
-              src={getImageUrl(vehicle.vehicleImage)}
+            <VehicleImage
+              src={activeImage || getVehicleImage(vehicle)}
               alt={vehicle.name}
-              className="img-fluid rounded shadow"
+              className="img-fluid rounded shadow w-100"
+              style={{ maxHeight: "430px", objectFit: "cover" }}
             />
+
+            {images.length > 1 && (
+              <div className="d-flex gap-2 mt-2 overflow-auto">
+                {images.map((image, index) => (
+                  <VehicleImage
+                    key={`${image}-${index}`}
+                    src={image}
+                    alt={`${vehicle.name} ${index + 1}`}
+                    onClick={() => setActiveImage(image)}
+                    className={`rounded border ${activeImage === image ? "border-danger" : ""}`}
+                    style={{ width: "82px", height: "62px", objectFit: "cover", cursor: "pointer" }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="col-md-6">
-            <h2 className="fw-bold">{vehicle.name}</h2>
-            <p className="text-muted mb-1">{vehicle.type.toUpperCase()}</p>
-
-            <h4 className="text-danger fw-bold">₹{vehicle.pricePerDay}/day</h4>
-
-            <div className="mt-3">
-              <p>
-                <strong>Brand:</strong> {vehicle.brand}
-              </p>
-              <p>
-                <strong>Model:</strong> {vehicle.model}
-              </p>
-              <p>
-                <strong>Location:</strong> {vehicle.location}
-              </p>
-              <p>
-                <strong>Contact:</strong> {vehicle.contactNumber}
-              </p>
+          <div className="col-md-6 d-flex flex-column">
+            <div className="d-flex justify-content-between align-items-start gap-3">
+              <div>
+                <h2 className="fw-bold mb-1">{vehicle.name}</h2>
+                <div className="d-flex flex-wrap gap-2 align-items-center mt-1">
+                  <span className="badge bg-secondary text-uppercase">{vehicle.type}</span>
+                  <span className={`badge ${vehicle.isAvailable ? "bg-success" : "bg-secondary"}`}>
+                    {vehicle.isAvailable ? "Available" : "Unavailable"}
+                  </span>
+                </div>
+              </div>
+              <div className="text-end">
+                <div className="text-danger fw-bold fs-4 lh-1">
+                  ₹{vehicle.pricePerDay}
+                  <small className="fs-6 fw-normal text-muted">/day</small>
+                </div>
+              </div>
             </div>
 
-            <button
-              className="btn btn-primary px-4 mt-3"
-              onClick={handleBookClick}
-            >
-              Book Now
-            </button>
+            <p className="mb-3 mt-2">
+              <i className="bi bi-star-fill text-warning"></i>{" "}
+              <strong>{vehicle.ratingAverage || 0}</strong> ({vehicle.ratingCount || 0} reviews)
+            </p>
+
+            <div className="row row-cols-1 row-cols-sm-2 g-3">
+              <div className="col">
+                <div className="vehicle-spec-card h-100">
+                  <small className="text-muted d-block text-uppercase">
+                    <i className="bi bi-tag me-1"></i>Brand
+                  </small>
+                  <span className="fw-semibold text-break">{vehicle.brand}</span>
+                </div>
+              </div>
+              <div className="col">
+                <div className="vehicle-spec-card h-100">
+                  <small className="text-muted d-block text-uppercase">
+                    <i className="bi bi-car-front me-1"></i>Model
+                  </small>
+                  <span className="fw-semibold text-break">{vehicle.model}</span>
+                </div>
+              </div>
+              <div className="col">
+                <div className="vehicle-spec-card h-100">
+                  <small className="text-muted d-block text-uppercase">
+                    <i className="bi bi-geo-alt me-1"></i>Location
+                  </small>
+                  <span className="fw-semibold text-break">{vehicle.location}</span>
+                </div>
+              </div>
+              <div className="col">
+                <div className="vehicle-spec-card h-100">
+                  <small className="text-muted d-block text-uppercase">
+                    <i className="bi bi-telephone me-1"></i>Contact
+                  </small>
+                  <span className="fw-semibold text-break">{vehicle.contactNumber}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-end mt-auto pt-4">
+              <button
+                className="btn btn-primary px-4"
+                onClick={handleBookClick}
+                disabled={!vehicle.isAvailable}
+              >
+                Book Now
+              </button>
+            </div>
           </div>
+        </div>
+
+        <div className="mt-5">
+          <h4 className="fw-bold mb-3">Reviews</h4>
+
+          {reviews.length === 0 ? (
+            <p className="text-muted">No reviews yet.</p>
+          ) : (
+            <div className="row g-3">
+              {reviews.map((review) => (
+                <div className="col-md-6" key={review._id}>
+                  <div className="card shadow-sm h-100">
+                    <div className="card-body">
+                      <div className="d-flex justify-content-between">
+                        <strong>{review.userId?.name || "User"}</strong>
+                        <span className="text-warning">
+                          {"★".repeat(review.rating)}
+                          <span className="text-muted">{"★".repeat(5 - review.rating)}</span>
+                        </span>
+                      </div>
+                      <p className="mb-1 mt-2">{review.comment}</p>
+                      <small className="text-muted">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       <UserFooter />
 
-      {/* Booking Modal */}
       {showBookingModal && (
-        <div className="booking-modal-overlay">
-          <div className="booking-modal">
-            <h4 className="fw-bold mb-3 text-center">Book Vehicle</h4>
+        <div className="vehicle-booking-overlay">
+          <div className="vehicle-booking-modal">
+            <h4 className="fw-bold mb-3 text-center">Book {vehicle.name}</h4>
 
             <label className="form-label">Select Date Range</label>
 
@@ -314,29 +332,22 @@ export default function UserVehicleDetails() {
               onChange={(update) => setDateRange(update)}
               minDate={new Date()}
               maxDate={
-                startDate
-                  ? new Date(
-                      startDate.getTime() + MAX_BOOK_DAYS * 24 * 60 * 60 * 1000
-                    )
-                  : null
+                startDate ? new Date(startDate.getTime() + MAX_BOOK_DAYS * 24 * 60 * 60 * 1000) : null
               }
-              excludeDates={bookedDates.map((d) => new Date(d + "T00:00:00"))}
+              excludeDates={bookedDates.map((date) => new Date(`${date}T00:00:00`))}
               inline
               className="clean-date-picker"
             />
 
+            <p className="small text-muted mt-2 mb-0">
+              Maximum {MAX_BOOK_DAYS} days. Unavailable dates are disabled.
+            </p>
+
             <div className="text-end mt-3">
-              <button
-                className="btn btn-success me-2"
-                onClick={handleConfirmBooking}
-              >
+              <button className="btn btn-success me-2" onClick={handleConfirmBooking}>
                 Confirm
               </button>
-
-              <button
-                className="btn btn-secondary"
-                onClick={() => setShowBookingModal(false)}
-              >
+              <button className="btn btn-secondary" onClick={() => setShowBookingModal(false)}>
                 Cancel
               </button>
             </div>

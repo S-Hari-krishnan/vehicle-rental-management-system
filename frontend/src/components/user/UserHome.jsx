@@ -1,107 +1,37 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import API, { getImageUrl } from "../../api";
+import API, { getVehicleImage } from "../../api";
 import UserFooter from "./UserFooter";
+import UserNavbar from "./UserNavbar";
+import VehicleImage from "../VehicleImage";
 import "./userhome.css";
 
 export default function UserHome() {
   const [vehicles, setVehicles] = useState([]);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("token") !== null;
-
-    if (!isLoggedIn) {
-      navigate("/login");
-      return;
-    }
+    const fetchPopularVehicles = async () => {
+      try {
+        const res = await API.get("/vehicle/all", {
+          params: { sort: "rating", limit: 8 },
+        });
+        setVehicles(res.data?.vehicles || []);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchPopularVehicles();
-  }, [navigate]);
-
-  const fetchPopularVehicles = async () => {
-    try {
-      const res = await API.get("/vehicle/all");
-
-      const allVehicles = res.data?.vehicles || [];
-
-      const shuffled = [...allVehicles].sort(() => 0.5 - Math.random());
-      setVehicles(shuffled.slice(0, 8));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleLogout = () => {
-    if (window.confirm("Are you sure you want to logout?")) {
-      localStorage.clear();
-      navigate("/login");
-    }
-  };
+  }, []);
 
   return (
-    <div className="userhome-page">
-      {/* INLINE USER NAVBAR HERE */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container-fluid mx-5">
-          <Link
-            to="/user/home"
-            className="navbar-brand fw-bold"
-            style={{ color: "red" }}
-          >
-            Vishnu Rentals
-          </Link>
+    <div className="userhome-page page-shell">
+      <UserNavbar active="home" />
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navContent"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-
-          <div
-            className="collapse navbar-collapse justify-content-end"
-            id="navContent"
-          >
-            <ul className="navbar-nav gap-5">
-              <li className="nav-item">
-                <Link to="/user/home" className="nav-link fw-bold text-danger">
-                  Home
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/vehicles/cars" className="nav-link">
-                  Cars
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/vehicles/bikes" className="nav-link">
-                  Bikes
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to="/bookings/user" className="nav-link">
-                  My Bookings
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <button className="btn btn-danger px-3" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      {/* END INLINE NAVBAR */}
-
-      {/* Hero Section */}
+      <main className="page-main">
       <div className="hero-section">
         <img src="/assets/bg1.jpg" className="h-img" alt="" />
         <div className="hero-content">
@@ -110,16 +40,13 @@ export default function UserHome() {
         </div>
       </div>
 
-      {/* Intro */}
       <div className="intro mt-5">
         <h3 className="fw-bold">Trusted by Thousands of Riders</h3>
         <h6>
-          Choose from a wide range of well-maintained bikes and cars at the best
-          prices.
+          Choose from a wide range of well-maintained bikes and cars at the best prices.
         </h6>
       </div>
 
-      {/* Features */}
       <div className="container mt-5">
         <div className="row text-center g-4">
           {[
@@ -129,8 +56,8 @@ export default function UserHome() {
             ["bi-infinity", "Unlimited KMs"],
             ["bi-house-door", "Home Delivery Available"],
             ["bi-car-front", "Multiple Options"],
-          ].map(([icon, text], i) => (
-            <div className="col col-md-4 col-lg-2 col-sm-6" key={i}>
+          ].map(([icon, text]) => (
+            <div className="col col-md-4 col-lg-2 col-sm-6" key={text}>
               <i className={`bi ${icon} fs-1 text-danger`}></i>
               <p className="fw-semibold mt-2">{text}</p>
             </div>
@@ -138,40 +65,58 @@ export default function UserHome() {
         </div>
       </div>
 
-      {/* Popular Vehicles */}
       <div className="vechicle-display my-5">
         <h2 className="fw-bold text-center mb-4">Popular Rentals</h2>
 
-        <div className="scroll-container d-flex gap-3 mx-3">
-          {vehicles.length === 0 ? (
-            <h5>No vehicles available</h5>
-          ) : (
-            vehicles.map((v) => (
+        {loading ? (
+          <h5 className="text-center">Loading...</h5>
+        ) : vehicles.length === 0 ? (
+          <h5 className="text-center">No vehicles available</h5>
+        ) : (
+          <div className="scroll-container d-flex gap-3 mx-3">
+            {vehicles.map((v) => (
               <div
                 key={v._id}
                 className="card col col-sm-6 col-lg-2 p-0"
                 style={{ minWidth: "250px" }}
               >
-                <img
-                  src={getImageUrl(v.vehicleImage)}
+                <VehicleImage
+                  src={getVehicleImage(v)}
                   className="card-img-top"
                   alt={v.name}
                 />
 
                 <div className="card-body text-center">
                   <h6 className="fw-bold">{v.name}</h6>
-                  <p className="mb-1">{v.type}</p>
-                  <p>₹{v.pricePerDay}/day</p>
+                  <p className="mb-1 text-capitalize">{v.type}</p>
+                  <p className="small mb-1">
+                    <i className="bi bi-geo-alt"></i> {v.location}
+                  </p>
+                  <p className="small mb-1">
+                    <i className="bi bi-star-fill text-warning"></i>{" "}
+                    {v.ratingAverage || 0} ({v.ratingCount || 0})
+                  </p>
+                  <p className="fw-semibold">₹{v.pricePerDay}/day</p>
 
-                  <Link to={`/vehicle/${v._id}`} className="btn btn-sm w-50 p-1">
+                  <Link to={`/vehicle/${v._id}`} className="btn btn-sm w-75 p-1">
                     View
                   </Link>
                 </div>
               </div>
-            ))
-          )}
+            ))}
+          </div>
+        )}
+
+        <div className="text-center mt-4">
+          <Link to="/vehicles/cars" className="btn btn-outline-danger me-2">
+            Browse Cars
+          </Link>
+          <Link to="/vehicles/bikes" className="btn btn-outline-danger">
+            Browse Bikes
+          </Link>
         </div>
       </div>
+      </main>
 
       <UserFooter />
     </div>

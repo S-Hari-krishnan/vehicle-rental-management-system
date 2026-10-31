@@ -50,6 +50,20 @@ export default function Signup() {
       return;
     }
 
+    if (userData.password.length < 8 || userData.password.length > 72) {
+      toast.error("Password must be between 8 and 72 characters.", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    if (!/[A-Za-z]/.test(userData.password) || !/[0-9]/.test(userData.password)) {
+      toast.error("Password must contain at least one letter and one number.", {
+        position: "top-center",
+      });
+      return;
+    }
+
     try {
       const res = await API.post("/auth/signup", userData);
 

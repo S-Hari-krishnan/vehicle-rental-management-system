@@ -1,11 +1,14 @@
 import "./App.css"
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import RedirectRoot from "./components/RedirectRoot";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import Login from "./components/login/Login"
 import Signup from "./components/login/SignUp"
+import ForgotPassword from "./components/login/ForgotPassword";
+import ResetPassword from "./components/login/ResetPassword";
 
 import Home from "./components/Home";
 
@@ -27,6 +30,13 @@ import AdminUsers from "./components/admin/AdminUsers";
 import AdminBookings from "./components/admin/AdminBookings";
 import AdminVehicles from "./components/admin/AdminVehicles";
 
+const protect = (element, role) => (
+  <ProtectedRoute role={role}>{element}</ProtectedRoute>
+);
+
+const protectAdmin = (element) => (
+  <ProtectedRoute admin>{element}</ProtectedRoute>
+);
 
 export default function App(){
   return(
@@ -36,29 +46,32 @@ export default function App(){
 
         <Route path="/home" element={<Home/>}/>
 
-        <Route path="/user/home" element={<UserHome/>}/>
-
         <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<Signup/>}/>
         <Route path="/Signup" element={<Signup/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/reset-password/:token" element={<ResetPassword/>}/>
 
-        <Route path="/owner/dashboard" element={<OwnerDashboard/>}/>
-        <Route path="/owner/add-vehicle" element={<AddVehicle/>}/>
-        <Route path="/owner/my-vehicles" element={<MyVehicles />} />
-        <Route path="/owner/edit-vehicle/:id" element={<EditVehicle />} />
-        <Route path="/owner/bookings" element={<OwnerBookings />} />
 
-        
-        <Route path="/vehicle/:id" element={<UserVehicleDetails />} />
-        <Route path="/vehicles/cars" element={<UserCars />} />
-        <Route path="/vehicles/bikes" element={<UserBikes />} />
-        <Route path="/bookings/user" element={<UserBookings />} />
+        <Route path="/user/home" element={protect(<UserHome/>, "user")}/>
+        <Route path="/vehicles/cars" element={protect(<UserCars />, "user")} />
+        <Route path="/vehicles/bikes" element={protect(<UserBikes />, "user")} />
+        <Route path="/vehicle/:id" element={protect(<UserVehicleDetails />)} />
+        <Route path="/bookings/user" element={protect(<UserBookings />, "user")} />
+
+        <Route path="/owner/dashboard" element={protect(<OwnerDashboard/>, "owner")}/>
+        <Route path="/owner/add-vehicle" element={protect(<AddVehicle/>, "owner")}/>
+        <Route path="/owner/my-vehicles" element={protect(<MyVehicles />, "owner")} />
+        <Route path="/owner/edit-vehicle/:id" element={protect(<EditVehicle />, "owner")} />
+        <Route path="/owner/bookings" element={protect(<OwnerBookings />, "owner")} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users" element={<AdminUsers />} />
-        <Route path="/admin/bookings" element={<AdminBookings />} />
-        <Route path="/admin/vehicles" element={<AdminVehicles />} />
-        
+        <Route path="/admin/dashboard" element={protectAdmin(<AdminDashboard />)} />
+        <Route path="/admin/users" element={protectAdmin(<AdminUsers />)} />
+        <Route path="/admin/bookings" element={protectAdmin(<AdminBookings />)} />
+        <Route path="/admin/vehicles" element={protectAdmin(<AdminVehicles />)} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <ToastContainer position="top-center" autoClose={3000} />
     </Router>

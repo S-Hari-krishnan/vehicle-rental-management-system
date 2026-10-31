@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="No vehicle image">
+  <rect width="640" height="400" fill="#eef1f4"/>
+  <g fill="none" stroke="#adb5bd" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M150 250h340l-30-60a40 40 0 0 0-36-24H216a40 40 0 0 0-36 24z"/>
+    <path d="M150 250v40h40v-20h260v20h40v-40"/>
+    <circle cx="220" cy="270" r="18"/>
+    <circle cx="420" cy="270" r="18"/>
+  </g>
+  <text x="320" y="340" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#868e96">No image available</text>
+</svg>

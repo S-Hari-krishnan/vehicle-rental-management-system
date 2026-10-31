@@ -2,6 +2,7 @@ import "./home.css";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API, { getImageUrl } from "../api";
+import VehicleImage from "./VehicleImage";
 
 export default function Home() {
   const [vehicles, setVehicles] = useState([]);
@@ -24,7 +25,7 @@ export default function Home() {
   };
 
   return (
-    <div className="home-page">
+    <div className="home-page page-shell">
       {/* navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div className="container-fluid mx-5">
@@ -77,7 +78,8 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* hero section */}
+      <main className="page-main">
+        {/* hero section */}
       <div className="hero-section">
         <img src="/assets/bg1.jpg" className="h-img" alt="" />
 
@@ -129,7 +131,7 @@ export default function Home() {
                 className="card col col-sm-6 col-lg-2 p-0"
                 style={{ minWidth: "250px" }}
               >
-                <img
+                <VehicleImage
                   src={getImageUrl(v.vehicleImage)}
                   className="card-img-top"
                   alt={v.name || "vehicle"}
@@ -163,9 +165,10 @@ export default function Home() {
           List Your Vehicle
         </Link>
       </div>
+      </main>
 
       {/* Footer Section */}
-      <footer className="footer mt-5 py-4 text-white">
+      <footer className="footer py-4 text-white">
         <div className="container">
           <div className="row text-center text-md-start">
             {/* Column 1 - Brand */}

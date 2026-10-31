@@ -6,7 +6,13 @@ export default function RedirectRoot() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const adminToken = localStorage.getItem("adminToken");
     const role = localStorage.getItem("role");
+
+    if (role === "admin" && adminToken) {
+      navigate("/admin/dashboard");
+      return;
+    }
 
     if (!token) {
       navigate("/home");         // Public Home without login

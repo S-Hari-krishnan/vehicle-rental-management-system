@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import "./login.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../../api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -18,68 +20,54 @@ export default function Login() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
 
-    if (token) {
-      if (role === "owner") {
-        navigate("/owner/dashboard");
-      } else {
-        navigate("/user/home");
-      }
-    }
+    if (!token) return;
+    if (role === "owner") navigate("/owner/dashboard");
+    else if (role === "admin") navigate("/admin/dashboard");
+    else navigate("/user/home");
   }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setLoginData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!loginData.email || !loginData.password) {
-      toast.error("Please fill in all fields", {
-        position: "top-center",
-      });
+      toast.error("Please fill in all fields");
       return;
     }
+
+    setSubmitting(true);
 
     try {
       const res = await API.post("/auth/login", loginData);
 
-      if (res.data.message === "Login Successful!") {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("role", res.data.role);
-        localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
+      localStorage.setItem("userId", res.data.userId);
+      localStorage.setItem("user", JSON.stringify(res.data.user || {}));
 
-        toast.success("Login Successful!", {
-          position: "top-center",
-        });
-
-        if (res.data.role === "owner") {
-          navigate("/owner/dashboard");
-        } else {
-          navigate("/user/home");
-        }
-      } else {
-        toast.error(res.data.message || "Login failed!", {
-          position: "top-center",
-        });
+      if (res.data.role === "admin") {
+        localStorage.setItem("adminToken", res.data.token);
       }
+
+      toast.success("Login successful!");
+
+      const redirectTo =
+        location.state?.from ||
+        (res.data.role === "owner"
+          ? "/owner/dashboard"
+          : res.data.role === "admin"
+          ? "/admin/dashboard"
+          : "/user/home");
+
+      navigate(redirectTo, { replace: true });
     } catch (error) {
-      console.log("Login error", error);
-
-      if (error.response) {
-        toast.error(error.response.data.message || "Server error", {
-          position: "top-center",
-        });
-      } else {
-        toast.error("Network error. Please try again.", {
-          position: "top-center",
-        });
-      }
+      toast.error(error.response?.data?.message || "Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -87,18 +75,17 @@ export default function Login() {
     <div className="container-fluid login-page">
       <ToastContainer />
 
-      <div className="container-fluid p-5">
+      <div className="container-fluid p-3 p-lg-5">
         <div className="row">
-          <div className="col col-lg-6 d-flex align-items-center justify-content-center main-con">
+          <div className="col-12 col-lg-6 d-flex align-items-center justify-content-center main-con">
             <div className="col mx-lg-5 d-flex flex-column justify-content-center align-items-center login-container pt-4">
               <p className="d-flex justify-content-center l-t-a fw-bold fs-4">
                 Login to your Account
               </p>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className="w-100">
                 <div className="d-flex flex-column">
                   <label className="mt-1 lab">Email</label>
-
                   <div className="inp">
                     <input
                       name="email"
@@ -107,13 +94,16 @@ export default function Login() {
                       type="email"
                       placeholder="Enter Email"
                       className="w-100"
+                      autoComplete="email"
                     />
                   </div>
 
                   <div className="d-flex justify-content-between">
                     <div className="mt-2 lab">Password</div>
                     <div className="mt-2">
-                      <span className="spn">forgot password?</span>
+                      <Link className="spn" to="/forgot-password">
+                        Forgot password?
+                      </Link>
                     </div>
                   </div>
 
@@ -125,12 +115,10 @@ export default function Login() {
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter Password"
                       className="w-100"
+                      autoComplete="current-password"
                     />
 
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
+                    <button type="button" onClick={() => setShowPassword(!showPassword)}>
                       {showPassword ? (
                         <ion-icon name="eye-off-outline"></ion-icon>
                       ) : (
@@ -139,20 +127,28 @@ export default function Login() {
                     </button>
                   </div>
 
-                  <button className="my-4 btn btn-secondary">LOGIN</button>
+                  <button className="my-4 btn btn-secondary" disabled={submitting}>
+                    {submitting ? "LOGGING IN..." : "LOGIN"}
+                  </button>
 
-                  <div className="mx-4 not-reg">
+                  <div className="mx-4 not-reg text-center">
                     Not registered yet?{" "}
                     <span className="spn">
                       <Link to="/signup">Create an account</Link>
                     </span>
+                  </div>
+
+                  <div className="mx-4 mt-2 text-center">
+                    <Link to="/admin/login" className="spn">
+                      Admin login
+                    </Link>
                   </div>
                 </div>
               </form>
             </div>
           </div>
 
-          <div className="col col-lg-6 bg-success img-container"></div>
+          <div className="col-12 col-lg-6 bg-success img-container d-none d-lg-block"></div>
         </div>
       </div>
     </div>

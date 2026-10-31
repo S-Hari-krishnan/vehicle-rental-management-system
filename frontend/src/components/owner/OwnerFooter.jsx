@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
+
 export default function OwnerFooter() {
   return (
-    <footer className="footer mt-5 py-4 text-white">
+    <footer className="footer py-4 text-white">
       <div className="container">
-        
         <div className="row text-center text-md-start">
           <div className="col-md-4 mb-3">
             <h5 className="fw-bold">Vishnu Rentals</h5>
@@ -14,10 +15,10 @@ export default function OwnerFooter() {
           <div className="col-md-4 mb-3">
             <h6 className="fw-semibold">Owner Panel</h6>
             <ul className="list-unstyled">
-              <li><a href="/owner/dashboard" className="footer-link">Dashboard</a></li>
-              <li><a href="/owner/my-vehicles" className="footer-link">My Vehicles</a></li>
-              <li><a href="/owner/add-vehicle" className="footer-link">Add Vehicle</a></li>
-              <li><a href="/owner/bookings" className="footer-link">Bookings</a></li>
+              <li><Link to="/owner/dashboard" className="footer-link">Dashboard</Link></li>
+              <li><Link to="/owner/my-vehicles" className="footer-link">My Vehicles</Link></li>
+              <li><Link to="/owner/add-vehicle" className="footer-link">Add Vehicle</Link></li>
+              <li><Link to="/owner/bookings" className="footer-link">Bookings</Link></li>
             </ul>
           </div>
 

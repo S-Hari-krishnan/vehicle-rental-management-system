@@ -2,32 +2,48 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
-    name:
-    {
-        type:String,
-        required:true,
-        trim: true,
-    },
-    email:
-    {
-        type:String,
-        unique:true,
-        required:true,
-        lowercase: true,
-    },
-    password:{
-        type:String,
-        required:true,
-    },
-    role: { 
-        type: String, 
-        enum: ["user", "owner","admin"], 
-        default: "user" 
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now,
-    },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true,
+    lowercase: true,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    default: "",
+    trim: true,
+  },
+  avatar: {
+    type: String,
+    default: "",
+  },
+  role: {
+    type: String,
+    enum: ["user", "owner", "admin"],
+    default: "user",
+  },
+  resetPasswordTokenHash: {
+    type: String,
+    default: null,
+  },
+  resetPasswordExpires: {
+    type: Date,
+    default: null,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 userSchema.pre("save", async function (next) {
@@ -37,9 +53,4 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// userSchema.methods.comparePassword = async function (enteredPassword) {
-//   return await bcrypt.compare(enteredPassword, this.password);
-// };
-
-// FIX - prevents OverwriteModelError
 module.exports = mongoose.models.User || mongoose.model("User", userSchema);
