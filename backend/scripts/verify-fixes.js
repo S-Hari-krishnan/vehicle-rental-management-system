@@ -11,6 +11,7 @@ const BASE_URL = (process.env.API_URL || `http://localhost:${process.env.PORT ||
   /\/$/,
   ""
 );
+const EXPECT_RESET_LINK = process.env.EXPECT_RESET_LINK !== "false";
 
 const results = [];
 
@@ -168,8 +169,10 @@ const expectUploadError = (file) =>
       `known="${known.body.message}" unknown="${unknown.body.message}"`
     );
     check(
-      "F5 development response still exposes reset link",
-      Boolean(known.body.resetUrl),
+      EXPECT_RESET_LINK
+        ? "F5 development response still exposes reset link"
+        : "F5 production response does not expose reset link",
+      EXPECT_RESET_LINK ? Boolean(known.body.resetUrl) : !known.body.resetUrl,
       `hasResetUrl=${Boolean(known.body.resetUrl)}`
     );
 

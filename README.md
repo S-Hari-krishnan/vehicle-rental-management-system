@@ -79,7 +79,7 @@ Backend:
 - `npm run dev` — start with nodemon
 - `npm start` — production server
 - `npm run create-admin` — create/update the configured admin
-- `npm run verify:fixes` — regression checks for the audit fixes (requires the API running and MongoDB connected)
+- `npm run verify:fixes` — regression checks for the audit fixes (requires the API running and MongoDB connected). Run against a deployed production API with `API_URL=https://<host> EXPECT_RESET_LINK=false npm run verify:fixes`.
 - `npm run verify:uploads` — Cloudinary upload checks for avatar, vehicle image, RC, and insurance (requires the API running, MongoDB connected, and Cloudinary configured)
 
 Frontend:
