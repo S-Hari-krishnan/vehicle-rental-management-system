@@ -100,11 +100,29 @@ Frontend:
 
 ### Backend (Render)
 
-`render.yaml` defines the API service. Set the environment variables in the Render dashboard, including the production frontend URL in `CLIENT_URL`. Multiple allowed origins can be comma-separated.
+1. Create a **Blueprint** (or Web Service) from the repository; `render.yaml` already sets the root directory, start command, and `/health` check.
+2. Set these environment variables in the Render dashboard:
+
+   | Variable | Value |
+   | --- | --- |
+   | `MONGO_URI` | MongoDB Atlas connection string |
+   | `JWT_SECRET` | long random secret |
+   | `CLIENT_URL` | deployed frontend URL (comma-separated if more than one) |
+   | `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
+   | `CLOUDINARY_API_KEY` | Cloudinary API key |
+   | `CLOUDINARY_API_SECRET` | Cloudinary API secret |
+   | `ADMIN_EMAIL` | admin login email |
+   | `ADMIN_PASSWORD` | strong admin password |
+
+3. After the first deploy, run `npm run create-admin` once (Render Shell) to create/update the admin.
+4. Confirm `https://<api-host>/health` returns `database: connected`.
 
 ### Frontend (Vercel)
 
-Import the `frontend` directory, set `VITE_API_URL` to the deployed API URL, and deploy. `frontend/vercel.json` rewrites client-side routes to `index.html`.
+1. Import the repository and set the project root to `frontend` (framework: Vite).
+2. Set `VITE_API_URL` to the deployed API URL.
+3. Deploy. `frontend/vercel.json` rewrites client-side routes to `index.html`.
+4. Update Render's `CLIENT_URL` to the final Vercel URL and redeploy the API.
 
 Ensure MongoDB Atlas network access allows the backend host. Cloudinary credentials must be configured before testing uploads.
 
@@ -118,7 +136,7 @@ Completed locally:
 - Frontend ESLint check
 - `npm audit` reports zero known vulnerabilities for both packages
 - `npm run verify:fixes` — 11/11 regression checks pass (malformed ids, price filters, upload errors, review deletion, password-reset responses)
-- `npm run verify:uploads` — 10/10 Cloudinary checks pass (avatar, vehicle image, RC, insurance, signed document URLs)
+- `npm run verify:uploads` — 11/11 Cloudinary checks pass (avatar, vehicle image, RC, insurance, signed and downloadable document URLs)
 
 ## Audit remediation
 
@@ -130,6 +148,6 @@ The findings in `audit/website-audit-2026-10-31.md` are addressed in code:
 - Deleting a review resets the linked booking's `isReviewed` flag (F4)
 - Forgot-password returns the same message for known and unknown emails; the reset link is only included outside production (F5)
 
-Cloudinary upload success paths (F6) are verified locally with real credentials: avatar, vehicle image, and image document uploads work, and documents return signed, downloadable URLs. PDF document downloads additionally require enabling **Settings → Security → "Allow delivery of PDF and ZIP files"** in the Cloudinary console; until then Cloudinary returns `401 deny or ACL failure` for PDFs.
+Cloudinary upload success paths (F6) are verified locally with real credentials: avatar, vehicle image, RC (PDF), and insurance uploads work, and both documents return signed, downloadable URLs. PDF downloads require **Settings → Security → "Allow delivery of PDF and ZIP files"** to be enabled in the Cloudinary console (it now is).
 
 Run `npm run verify:fixes` and `npm run verify:uploads` (with the API running) to repeat the regression and upload checks.
