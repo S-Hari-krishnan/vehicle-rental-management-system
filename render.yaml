@@ -1,6 +1,7 @@
 services:
   - type: web
     name: vrms-api
+    plan: free
     runtime: node
     rootDir: backend
     buildCommand: npm install
