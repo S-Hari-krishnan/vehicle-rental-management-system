@@ -1,9 +1,18 @@
 import "./App.css"
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import RedirectRoot from "./components/RedirectRoot";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { SESSION_EXPIRED_EVENT } from "./utils/auth";
 
 import Login from "./components/login/Login"
 import Signup from "./components/login/SignUp"
@@ -38,9 +47,39 @@ const protectAdmin = (element) => (
   <ProtectedRoute admin>{element}</ProtectedRoute>
 );
 
+function SessionExpiryHandler() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname, search } = location;
+
+  useEffect(() => {
+    const handleSessionExpired = (event) => {
+      const admin = Boolean(event.detail?.admin);
+      const current = `${pathname}${search}`;
+      const isLoginPage =
+        current.startsWith("/login") || current.startsWith("/admin/login");
+
+      navigate(admin ? "/admin/login" : "/login", {
+        replace: true,
+        state: {
+          sessionExpired: true,
+          from: admin || isLoginPage ? undefined : current,
+        },
+      });
+    };
+
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+    return () =>
+      window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpired);
+  }, [navigate, pathname, search]);
+
+  return null;
+}
+
 export default function App(){
   return(
     <Router>
+      <SessionExpiryHandler />
       <Routes>
         <Route path="/" element={<RedirectRoot />} />
 

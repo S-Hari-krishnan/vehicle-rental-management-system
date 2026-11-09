@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ProfileModal from "../ProfileModal";
+import { clearAuth } from "../../utils/auth";
 
 const links = [
   { to: "/user/home", label: "Home", key: "home" },
@@ -17,7 +18,7 @@ export default function UserNavbar({ active }) {
 
   const handleLogout = () => {
     if (window.confirm("Are you sure you want to logout?")) {
-      localStorage.clear();
+      clearAuth();
       toast.success("Logged out successfully");
       navigate("/login");
     }

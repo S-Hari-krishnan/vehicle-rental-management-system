@@ -1,7 +1,19 @@
 import axios from "axios";
+import { notifySessionExpired } from "./utils/auth";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+
+const AUTH_ENDPOINTS = [
+  "/auth/login",
+  "/auth/signup",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+  "/admin/login",
+];
+
+const isAuthEndpoint = (url = "") =>
+  AUTH_ENDPOINTS.some((endpoint) => url.startsWith(endpoint));
 
 const API = axios.create({
   baseURL: API_BASE_URL,
@@ -15,7 +27,7 @@ API.interceptors.request.use((config) => {
     ? localStorage.getItem("adminToken")
     : localStorage.getItem("token");
 
-  if (token && !config.headers?.Authorization) {
+  if (token && !isAuthEndpoint(config.url) && !config.headers?.Authorization) {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
@@ -28,13 +40,11 @@ API.interceptors.response.use(
     const status = error.response?.status;
     const url = error.config?.url || "";
     const isAdminRequest = url.startsWith("/admin") || url.startsWith("admin");
+    const hadAuthHeader = Boolean(error.config?.headers?.Authorization);
 
-    if (status === 401) {
-      if (isAdminRequest) {
-        localStorage.removeItem("adminToken");
-      } else {
-        localStorage.removeItem("token");
-      }
+    if (status === 401 && !isAuthEndpoint(url) && hadAuthHeader) {
+      error.isAuthExpired = true;
+      notifySessionExpired(isAdminRequest);
     }
 
     return Promise.reject(error);

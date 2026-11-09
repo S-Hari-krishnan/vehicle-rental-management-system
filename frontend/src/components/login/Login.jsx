@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import "./login.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../../api";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import {
+  clearAuth,
+  isTokenExpired,
+  SESSION_EXPIRED_MESSAGE,
+} from "../../utils/auth";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,10 +25,26 @@ export default function Login() {
     const role = localStorage.getItem("role");
 
     if (!token) return;
+    if (isTokenExpired(token)) {
+      clearAuth();
+      return;
+    }
+
     if (role === "owner") navigate("/owner/dashboard");
     else if (role === "admin") navigate("/admin/dashboard");
     else navigate("/user/home");
   }, [navigate]);
+
+  useEffect(() => {
+    if (!location.state?.sessionExpired) return;
+
+    toast.warning(SESSION_EXPIRED_MESSAGE, { toastId: "session-expired" });
+    const from = location.state?.from;
+    navigate("/login", {
+      replace: true,
+      state: from ? { from } : undefined,
+    });
+  }, [location.state, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,6 +64,7 @@ export default function Login() {
     try {
       const res = await API.post("/auth/login", loginData);
 
+      clearAuth();
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
       localStorage.setItem("userId", res.data.userId);
@@ -73,8 +94,6 @@ export default function Login() {
 
   return (
     <div className="container-fluid login-page">
-      <ToastContainer />
-
       <div className="container-fluid p-3 p-lg-5">
         <div className="row">
           <div className="col-12 col-lg-6 d-flex align-items-center justify-content-center main-con">

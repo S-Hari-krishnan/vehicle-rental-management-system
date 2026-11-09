@@ -1,20 +1,39 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import API from "../../api";
 import "./adminlogin.css";
 import { toast } from "react-toastify";
+import {
+  clearAuth,
+  isTokenExpired,
+  SESSION_EXPIRED_MESSAGE,
+} from "../../utils/auth";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (localStorage.getItem("adminToken")) {
-      navigate("/admin/dashboard", { replace: true });
+    const adminToken = localStorage.getItem("adminToken");
+    if (!adminToken) return;
+
+    if (isTokenExpired(adminToken)) {
+      clearAuth();
+      return;
     }
+
+    navigate("/admin/dashboard", { replace: true });
   }, [navigate]);
+
+  useEffect(() => {
+    if (!location.state?.sessionExpired) return;
+
+    toast.warning(SESSION_EXPIRED_MESSAGE, { toastId: "session-expired" });
+    navigate("/admin/login", { replace: true });
+  }, [location.state, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +41,7 @@ export default function AdminLogin() {
 
     try {
       const res = await API.post("/admin/login", { email, password });
+      clearAuth();
       localStorage.setItem("adminToken", res.data.token);
       localStorage.setItem("role", "admin");
       toast.success("Admin login successful");
