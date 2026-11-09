@@ -79,6 +79,7 @@ Backend:
 - `npm run dev` — start with nodemon
 - `npm start` — production server
 - `npm run create-admin` — create/update the configured admin
+- `npm run verify:fixes` — regression checks for the audit fixes (requires the API running and MongoDB connected)
 
 Frontend:
 
@@ -115,3 +116,16 @@ Completed locally:
 - Frontend production build
 - Frontend ESLint check
 - `npm audit` reports zero known vulnerabilities for both packages
+- `npm run verify:fixes` — 11/11 regression checks pass (malformed ids, price filters, upload errors, review deletion, password-reset responses)
+
+## Audit remediation
+
+The findings in `audit/website-audit-2026-10-31.md` are addressed in code:
+
+- `CastError` responses now return `400` with a generic message instead of `500` (F1)
+- Non-numeric `minPrice` / `maxPrice` filters are ignored instead of crashing the list (F2)
+- Rejected uploads carry a `400` status (F3)
+- Deleting a review resets the linked booking's `isReviewed` flag (F4)
+- Forgot-password returns the same message for known and unknown emails; the reset link is only included outside production (F5)
+
+Cloudinary upload success paths (F6) still require real `CLOUDINARY_*` credentials before they can be verified.

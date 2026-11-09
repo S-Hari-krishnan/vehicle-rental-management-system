@@ -183,27 +183,25 @@ router.post(
   validate(z.object({ email: z.string().trim().email("Enter a valid email").toLowerCase() })),
   asyncHandler(async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
+    const message =
+      "If an account with that email exists, a reset link has been generated.";
 
-    if (user) {
-      const { token, hash, expires } = createResetToken();
-      user.resetPasswordTokenHash = hash;
-      user.resetPasswordExpires = expires;
-      await user.save();
-
-      const resetUrl = buildResetUrl(token);
-
-      if (process.env.NODE_ENV !== "production") {
-        console.log(`Password reset link for ${user.email}: ${resetUrl}`);
-        return res.status(200).json({
-          message: "Password reset link generated",
-          resetUrl,
-        });
-      }
+    if (!user) {
+      return res.status(200).json({ message });
     }
 
-    res.status(200).json({
-      message: "If an account with that email exists, a reset link has been generated.",
-    });
+    const { token, hash, expires } = createResetToken();
+    user.resetPasswordTokenHash = hash;
+    user.resetPasswordExpires = expires;
+    await user.save();
+
+    if (process.env.NODE_ENV !== "production") {
+      const resetUrl = buildResetUrl(token);
+      console.log(`Password reset link for ${user.email}: ${resetUrl}`);
+      return res.status(200).json({ message, resetUrl });
+    }
+
+    return res.status(200).json({ message });
   })
 );
 

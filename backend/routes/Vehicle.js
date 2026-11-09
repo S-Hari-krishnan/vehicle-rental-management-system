@@ -14,6 +14,12 @@ const router = express.Router();
 
 const escapeRegex = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+const parsePriceParam = (value) => {
+  if (value === undefined || value === null || String(value).trim() === "") return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
 const uploadFields = upload.fields([
   { name: "images", maxCount: 5 },
   { name: "vehicleImage", maxCount: 1 },
@@ -114,10 +120,13 @@ router.get(
 
     if (location) filter.location = new RegExp(escapeRegex(location), "i");
 
-    if (minPrice || maxPrice) {
+    const minPriceValue = parsePriceParam(minPrice);
+    const maxPriceValue = parsePriceParam(maxPrice);
+
+    if (minPriceValue !== null || maxPriceValue !== null) {
       filter.pricePerDay = {};
-      if (minPrice) filter.pricePerDay.$gte = Number(minPrice);
-      if (maxPrice) filter.pricePerDay.$lte = Number(maxPrice);
+      if (minPriceValue !== null) filter.pricePerDay.$gte = minPriceValue;
+      if (maxPriceValue !== null) filter.pricePerDay.$lte = maxPriceValue;
     }
 
     const sortOptions = {

@@ -11,6 +11,10 @@ const errorHandler = (err, req, res, next) => {
     return res.status(400).json({ message: err.message || "File upload failed" });
   }
 
+  if (err.name === "CastError") {
+    return res.status(400).json({ message: "Invalid identifier" });
+  }
+
   if (err.name === "ValidationError") {
     return res.status(400).json({
       message: "Validation failed",

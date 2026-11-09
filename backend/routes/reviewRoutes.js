@@ -110,6 +110,11 @@ router.delete(
     if (!review) return res.status(404).json({ message: "Review not found" });
 
     await review.deleteOne();
+
+    if (review.bookingId) {
+      await Booking.findByIdAndUpdate(review.bookingId, { isReviewed: false });
+    }
+
     await refreshVehicleRating(review.vehicleId);
 
     res.status(200).json({ message: "Review deleted" });
