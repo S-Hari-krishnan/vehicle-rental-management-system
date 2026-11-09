@@ -80,6 +80,7 @@ Backend:
 - `npm start` — production server
 - `npm run create-admin` — create/update the configured admin
 - `npm run verify:fixes` — regression checks for the audit fixes (requires the API running and MongoDB connected)
+- `npm run verify:uploads` — Cloudinary upload checks for avatar, vehicle image, RC, and insurance (requires the API running, MongoDB connected, and Cloudinary configured)
 
 Frontend:
 
@@ -117,6 +118,7 @@ Completed locally:
 - Frontend ESLint check
 - `npm audit` reports zero known vulnerabilities for both packages
 - `npm run verify:fixes` — 11/11 regression checks pass (malformed ids, price filters, upload errors, review deletion, password-reset responses)
+- `npm run verify:uploads` — 10/10 Cloudinary checks pass (avatar, vehicle image, RC, insurance, signed document URLs)
 
 ## Audit remediation
 
@@ -128,4 +130,6 @@ The findings in `audit/website-audit-2026-10-31.md` are addressed in code:
 - Deleting a review resets the linked booking's `isReviewed` flag (F4)
 - Forgot-password returns the same message for known and unknown emails; the reset link is only included outside production (F5)
 
-Cloudinary upload success paths (F6) still require real `CLOUDINARY_*` credentials before they can be verified.
+Cloudinary upload success paths (F6) are verified locally with real credentials: avatar, vehicle image, and image document uploads work, and documents return signed, downloadable URLs. PDF document downloads additionally require enabling **Settings → Security → "Allow delivery of PDF and ZIP files"** in the Cloudinary console; until then Cloudinary returns `401 deny or ACL failure` for PDFs.
+
+Run `npm run verify:fixes` and `npm run verify:uploads` (with the API running) to repeat the regression and upload checks.

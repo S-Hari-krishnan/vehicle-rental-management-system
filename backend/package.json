@@ -10,7 +10,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "create-admin": "node createAdmin.js",
-    "verify:fixes": "node scripts/verify-fixes.js"
+    "verify:fixes": "node scripts/verify-fixes.js",
+    "verify:uploads": "node scripts/verify-uploads.js"
   },
   "keywords": [],
   "author": "",
