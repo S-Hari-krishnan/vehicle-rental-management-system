@@ -2,13 +2,14 @@
 .userhome-page .h-img {
   object-fit: cover;
   width: 100%;
-  height: 500px;
+  height: 100%;
   filter: brightness(80%);
 }
 
 .userhome-page .hero-section {
-  height: 500px;
+  height: clamp(320px, 55vh, 500px);
   position: relative;
+  overflow: hidden;
 }
 
 .userhome-page .hero-content {

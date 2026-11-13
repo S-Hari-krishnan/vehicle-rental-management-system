@@ -1,7 +1,3 @@
-* {
-  font-family: 'Signika', sans-serif;
-}
-
 /* 🌟 Page Background (Brand Gradient) */
 .login-page {
   background: linear-gradient(135deg, #ffe5e7 0%, #ffd4d8 50%, #ffe9e9 100%);

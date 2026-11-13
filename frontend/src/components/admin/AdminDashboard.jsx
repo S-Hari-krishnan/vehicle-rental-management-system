@@ -79,7 +79,7 @@ export default function AdminDashboard() {
   return (
     <div className="admin-dashboard-page">
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container-fluid mx-5">
+        <div className="container-fluid px-3 px-lg-5">
           <Link to="/admin/dashboard" className="navbar-brand fw-bold" style={{ color: "red" }}>
             Hari Rentals — Admin
           </Link>
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
           </button>
 
           <div className="collapse navbar-collapse justify-content-end" id="navAdmin">
-            <ul className="navbar-nav gap-4">
+            <ul className="navbar-nav gap-2 gap-lg-4 align-items-lg-center py-2 py-lg-0">
               <li className="nav-item">
                 <Link to="/admin/dashboard" className="nav-link fw-bold text-danger">
                   Dashboard
@@ -132,7 +132,7 @@ export default function AdminDashboard() {
         </div>
 
         {stats.pendingVehicles > 0 && (
-          <div className="alert alert-warning mt-4 d-flex justify-content-between align-items-center">
+          <div className="alert alert-warning mt-4 d-flex flex-wrap gap-2 justify-content-between align-items-center">
             <span>{stats.pendingVehicles} vehicle(s) awaiting approval.</span>
             <Link to="/admin/vehicles?status=pending" className="btn btn-sm btn-warning">
               Review now

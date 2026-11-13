@@ -1,0 +1,251 @@
+/* ============================================================
+   Cross-device responsive layer
+   Loaded last (main.jsx) so it can refine component styles.
+   ============================================================ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "Signika", "Lato", system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, sans-serif;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+.page-shell,
+.login-page,
+.signup-page,
+.admin-login-wrapper {
+  min-height: 100dvh;
+}
+
+/* ---------------- Navbar: tablets & phones ---------------- */
+@media (max-width: 991.98px) {
+  .navbar {
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .navbar .navbar-brand {
+    font-size: 1.15rem;
+    max-width: 64vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .navbar .navbar-collapse {
+    margin-top: 0.6rem;
+    padding: 0.5rem 0 0.75rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+  }
+
+  .navbar .navbar-nav {
+    gap: 0.15rem !important;
+  }
+
+  .navbar .navbar-nav .nav-link {
+    padding: 0.65rem 0.25rem;
+  }
+
+  .navbar .navbar-nav .btn {
+    width: 100%;
+    padding: 0.55rem 1rem;
+  }
+}
+
+/* ---------------- Hero banners ---------------- */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section .hero-content {
+  padding: 1.25rem;
+  text-align: center;
+}
+
+@media (max-width: 767.98px) {
+  .hero-section .hero-content h1 {
+    font-size: 1.75rem;
+    line-height: 1.25;
+  }
+
+  .hero-section .hero-content h4 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .hero-section .hero-content h1 {
+    font-size: 1.45rem;
+  }
+
+  .hero-section .hero-content h4 {
+    font-size: 0.95rem;
+  }
+}
+
+/* ---------------- Section rhythm ---------------- */
+.intro {
+  text-align: center;
+}
+
+@media (max-width: 767.98px) {
+  .container.my-5,
+  .container-fluid.my-5 {
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .intro {
+    padding: 0 1rem;
+    text-align: center;
+  }
+
+  .intro h3 {
+    font-size: 1.3rem;
+  }
+
+  .intro h6 {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .vechicle-display h2 {
+    font-size: 1.35rem;
+  }
+
+  .display-6 {
+    font-size: 2rem;
+  }
+
+  .footer {
+    text-align: center;
+  }
+}
+
+/* ---------------- Popular rentals rail ---------------- */
+.scroll-container {
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-container > .card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 575.98px) {
+  .scroll-container > .card {
+    max-width: 82vw;
+  }
+}
+
+/* ---------------- Forms ---------------- */
+@media (max-width: 767.98px) {
+  /* 16px keeps iOS from zooming the page on focus */
+  .form-control,
+  .form-select,
+  .form-control-sm,
+  .form-select-sm {
+    font-size: 16px;
+  }
+}
+
+/* ---------------- Modals always fit the viewport ---------------- */
+.modal-card,
+.modal-container,
+.booking-modal,
+.profile-modal,
+.vehicle-booking-modal {
+  max-width: min(600px, calc(100vw - 24px));
+}
+
+@media (max-width: 575.98px) {
+  .modal-overlay,
+  .profile-modal-overlay,
+  .booking-modal-overlay,
+  .vehicle-booking-overlay {
+    padding: 10px;
+  }
+
+  .modal-card,
+  .modal-container,
+  .booking-modal,
+  .profile-modal,
+  .vehicle-booking-modal {
+    padding: 16px !important;
+    max-height: calc(100dvh - 20px);
+  }
+}
+
+/* ---------------- Auth pages ---------------- */
+@media (max-width: 1199.98px) {
+  .login-container {
+    transform: none;
+    max-width: 100%;
+  }
+}
+
+@media (max-height: 780px) and (min-width: 992px) {
+  .login-page,
+  .signup-page {
+    padding: 24px 0;
+  }
+
+  .main-con,
+  .s-main-con {
+    height: auto;
+    min-height: 60vh;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .login-page,
+  .signup-page {
+    padding: 16px;
+  }
+
+  .main-con,
+  .s-main-con {
+    padding: 20px 16px;
+  }
+
+  .l-t-a,
+  .c-a-a {
+    font-size: 1.3rem;
+  }
+}
+
+/* ---------------- Dashboards ---------------- */
+@media (max-width: 575.98px) {
+  .stat-card h6 {
+    font-size: 0.85rem;
+  }
+
+  .stat-card .display-6 {
+    font-size: 1.8rem;
+  }
+
+  .booking-card,
+  .user-card {
+    padding: 0.9rem !important;
+  }
+}
+
+/* ---------------- Tables & toasts ---------------- */
+.table-responsive {
+  -webkit-overflow-scrolling: touch;
+}
+
+.Toastify__toast-container {
+  width: min(92vw, 420px) !important;
+}

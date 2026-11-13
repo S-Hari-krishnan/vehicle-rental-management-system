@@ -28,7 +28,7 @@ export default function Home() {
     <div className="home-page page-shell">
       {/* navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container-fluid mx-5">
+        <div className="container-fluid px-3 px-lg-5">
           <Link to="/" className="navbar-brand fw-bold" style={{ color: "red" }}>
             Hari Rentals
           </Link>
@@ -43,7 +43,7 @@ export default function Home() {
           </button>
 
           <div className="collapse navbar-collapse justify-content-end" id="navContent">
-            <ul className="navbar-nav gap-5">
+            <ul className="navbar-nav gap-2 gap-lg-4 align-items-lg-center py-2 py-lg-0">
               <li className="nav-item">
                 <Link to="/" className="nav-link active">
                   Home
@@ -63,7 +63,7 @@ export default function Home() {
               </li>
 
               <li className="nav-item">
-                <Link className="btn mb-2 px-3" to="/login">
+                <Link className="btn mb-2 mb-lg-0 px-3" to="/login">
                   Login
                 </Link>
               </li>

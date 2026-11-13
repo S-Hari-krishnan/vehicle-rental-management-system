@@ -26,7 +26,7 @@ export default function OwnerNavbar({ active }) {
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-      <div className="container-fluid mx-3 mx-lg-5">
+      <div className="container-fluid px-3 px-lg-5">
         <Link to="/owner/dashboard" className="navbar-brand fw-bold" style={{ color: "red" }}>
           Hari Rentals
         </Link>

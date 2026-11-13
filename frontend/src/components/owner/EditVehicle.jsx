@@ -257,8 +257,8 @@ export default function EditVehicle() {
             </div>
           </div>
 
-          <div className="text-center mt-4">
-            <button className="update-vehicle-btn px-4 me-3" type="submit" disabled={loading}>
+          <div className="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-4">
+            <button className="update-vehicle-btn px-4" type="submit" disabled={loading}>
               {loading ? "Updating..." : "Update Vehicle"}
             </button>
 

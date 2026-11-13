@@ -195,8 +195,8 @@ export default function AddVehicle() {
             </div>
           </div>
 
-          <div className="text-center mt-5">
-            <button type="submit" className="btn btn-success px-5 me-3" disabled={submitting}>
+          <div className="d-flex flex-column flex-sm-row justify-content-center gap-2 mt-5">
+            <button type="submit" className="btn btn-success px-5" disabled={submitting}>
               {submitting ? "Submitting..." : "Submit"}
             </button>
 

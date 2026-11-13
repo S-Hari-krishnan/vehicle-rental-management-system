@@ -128,7 +128,7 @@ export default function AdminVehicles() {
   return (
     <div className="admin-vehicles-page">
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container-fluid mx-5">
+        <div className="container-fluid px-3 px-lg-5">
           <Link to="/admin/dashboard" className="navbar-brand fw-bold" style={{ color: "red" }}>
             Hari Rentals — Admin
           </Link>
@@ -138,7 +138,7 @@ export default function AdminVehicles() {
           </button>
 
           <div className="collapse navbar-collapse justify-content-end" id="adminNav">
-            <ul className="navbar-nav gap-4">
+            <ul className="navbar-nav gap-2 gap-lg-4 align-items-lg-center py-2 py-lg-0">
               <li className="nav-item"><Link to="/admin/dashboard" className="nav-link fw-semibold">Dashboard</Link></li>
               <li className="nav-item"><Link to="/admin/users" className="nav-link fw-semibold">Users</Link></li>
               <li className="nav-item"><Link to="/admin/bookings" className="nav-link fw-semibold">Bookings</Link></li>

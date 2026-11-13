@@ -68,7 +68,7 @@ export default function VehicleBrowser({ type, title, active }) {
 
         <form className="card shadow-sm p-3 mb-4" onSubmit={handleSubmit}>
           <div className="row g-2 align-items-end">
-            <div className="col-md-4">
+            <div className="col-12 col-md-5">
               <label className="form-label small mb-1">Search</label>
               <input
                 className="form-control"
@@ -79,7 +79,7 @@ export default function VehicleBrowser({ type, title, active }) {
               />
             </div>
 
-            <div className="col-md-3">
+            <div className="col-12 col-md-4">
               <label className="form-label small mb-1">Location</label>
               <input
                 className="form-control"
@@ -90,7 +90,7 @@ export default function VehicleBrowser({ type, title, active }) {
               />
             </div>
 
-            <div className="col-6 col-md-1">
+            <div className="col-6 col-md-3">
               <label className="form-label small mb-1">Min ₹</label>
               <input
                 className="form-control"
@@ -102,7 +102,7 @@ export default function VehicleBrowser({ type, title, active }) {
               />
             </div>
 
-            <div className="col-6 col-md-1">
+            <div className="col-6 col-md-3">
               <label className="form-label small mb-1">Max ₹</label>
               <input
                 className="form-control"
@@ -114,7 +114,7 @@ export default function VehicleBrowser({ type, title, active }) {
               />
             </div>
 
-            <div className="col-md-2">
+            <div className="col-12 col-md-3">
               <label className="form-label small mb-1">Sort</label>
               <select className="form-select" name="sort" value={filters.sort} onChange={handleChange}>
                 <option value="newest">Newest</option>
@@ -125,7 +125,7 @@ export default function VehicleBrowser({ type, title, active }) {
               </select>
             </div>
 
-            <div className="col-md-1 d-flex gap-1">
+            <div className="col-12 col-md-6 d-flex gap-2">
               <button className="btn btn-danger flex-grow-1" type="submit">
                 Go
               </button>
