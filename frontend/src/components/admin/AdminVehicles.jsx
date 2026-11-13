@@ -130,7 +130,7 @@ export default function AdminVehicles() {
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div className="container-fluid mx-5">
           <Link to="/admin/dashboard" className="navbar-brand fw-bold" style={{ color: "red" }}>
-            Vishnu Rentals — Admin
+            Hari Rentals — Admin
           </Link>
 
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">

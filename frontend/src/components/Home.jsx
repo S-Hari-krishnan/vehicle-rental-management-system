@@ -30,7 +30,7 @@ export default function Home() {
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div className="container-fluid mx-5">
           <Link to="/" className="navbar-brand fw-bold" style={{ color: "red" }}>
-            Vishnu Rentals
+            Hari Rentals
           </Link>
 
           <button
@@ -156,7 +156,7 @@ export default function Home() {
       <div className="owner-call text-center my-5">
         <h3 className="fw-bold">Have a vehicle? Start Earning Today!</h3>
         <p className="text-muted">
-          Join <span className="text-danger fw-semibold">Vishnu Rentals</span>{" "}
+          Join <span className="text-danger fw-semibold">Hari Rentals</span>{" "}
           and list your bike or car in minutes. Earn effortlessly by sharing your
           ride with trusted customers.
         </p>
@@ -173,7 +173,7 @@ export default function Home() {
           <div className="row text-center text-md-start">
             {/* Column 1 - Brand */}
             <div className="col-md-4 mb-3">
-              <h5 className="fw-bold">Vishnu Rentals</h5>
+              <h5 className="fw-bold">Hari Rentals</h5>
               <p className="small">
                 Your trusted platform for renting bikes and cars — fast, easy,
                 and affordable.
@@ -216,7 +216,7 @@ export default function Home() {
 
               <p className="small mb-1">
                 <i className="bi bi-envelope-fill me-2"></i>
-                support@vishnurentals.com
+                support@harirentals.com
               </p>
 
               <p className="small mb-1">
@@ -233,7 +233,7 @@ export default function Home() {
 
           {/* Bottom Bar */}
           <div className="text-center mt-3 border-top pt-3 small">
-            © {new Date().getFullYear()} Vishnu Rentals. All Rights Reserved.
+            © {new Date().getFullYear()} Hari Rentals. All Rights Reserved.
           </div>
         </div>
       </footer>

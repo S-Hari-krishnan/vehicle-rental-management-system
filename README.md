@@ -1,4 +1,4 @@
-# Vishnu Rentals — Vehicle Rental Management System
+# Hari Rentals — Vehicle Rental Management System
 
 Production-oriented MERN application for renting and managing cars and bikes.
 

@@ -6,7 +6,7 @@ export default function OwnerFooter() {
       <div className="container">
         <div className="row text-center text-md-start">
           <div className="col-md-4 mb-3">
-            <h5 className="fw-bold">Vishnu Rentals</h5>
+            <h5 className="fw-bold">Hari Rentals</h5>
             <p className="small">
               Manage your fleet and grow your rental business effortlessly.
             </p>
@@ -24,13 +24,13 @@ export default function OwnerFooter() {
 
           <div className="col-md-4 mb-3">
             <h6 className="fw-semibold">Support</h6>
-            <p className="small"><i className="bi bi-envelope-fill me-2"></i>owner@vishnurentals.com</p>
+            <p className="small"><i className="bi bi-envelope-fill me-2"></i>owner@harirentals.com</p>
             <p className="small"><i className="bi bi-telephone-fill me-2"></i>+91 98765 00000</p>
           </div>
         </div>
 
         <div className="text-center mt-3 border-top pt-3 small">
-          © {new Date().getFullYear()} Vishnu Rentals — Owner Panel
+          © {new Date().getFullYear()} Hari Rentals — Owner Panel
         </div>
       </div>
     </footer>
